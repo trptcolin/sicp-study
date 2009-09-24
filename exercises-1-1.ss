@@ -37,6 +37,7 @@
   ;; => 16
 
 
+
 ; Exercise 1.2
 (/ (+ 5 4 (- 2
              (- 3
@@ -45,6 +46,7 @@
    (* 3
       (- 6 2)
       (- 2 7)))
+
 
 
 ; Exercise 1.3
@@ -63,6 +65,7 @@
          (sum-of-squares a b))))
 
 
+
 ; Exercise 1.4
 
 (define (a-plus-abs-b a b)
@@ -70,6 +73,7 @@
 
   ;; either the + or - operation is applied on a and b,
   ;;   depending on the result of the > test on b and 0
+
 
 
 ; Exercise 1.5
@@ -91,6 +95,7 @@
   ;; Normal order evaluates arguments only when they are needed in
   ;;   execution, so since the test (= x 0) evaluates to #t where x = 0,
   ;;   y never needs to be evaluated to the bogus (p) application.
+
 
 
 ; Exercise 1.6
@@ -127,27 +132,71 @@
   ;;   something like normal order.
 
 
-; TODO: Exercise 1.7
+
+; Exercise 1.7
+
+  ;; example of bogus small number: (square 0.0002) => 0.00000004, but
+  ;;   (root 0.00000004) => .03125042624884061  (obviously not close)
+  ;;   the problem here is this:
+  ;;     (square .03125042624884061) =>  9.765891407342263e-4
+  ;;   which is easily within 0.001 (on the zero side) of the actual value,
+  ;;     0.0002
+
+  ;; example of bogus big number:
+  ;;   (root 1e50) => recurses forever!
+  ;;   this is because we have to actually square the guess to see if it's good
+  ;;   enough, and so (eventually) we have overflow
+
+  ;; alternative good-enough?:
+(define (root x)
+  (define (average x y)
+    (/ (+ x y) 2))
+
+  (define (improve guess)
+    (average guess (/ x guess)))
+
+  (define (sqrt-iter guess last-guess)
+    (if (good-enough? guess last-guess)
+        guess
+        (sqrt-iter (improve guess)
+                   guess)))
+
+  (define (good-enough? guess last-guess)
+    (< (/ (abs (- guess last-guess)) guess) 0.00001))
+  
+  (sqrt-iter 1.0 0.0))
+
+  ;; this does work much better for small numbers:
+  ;;    (root 0.00000004) => 2.0000000000164927e-4
+  ;; and even smaller:
+  ;;    (root 4e-100) => 2.000000000000401e-50
+  ;; it also is better for large numbers
+  ;;    (root 1e50) => 1.0000000000000725e25
+  ;; and even bigger:
+  ;;    (root 1e308) => 1e154
 
 
-; TODO: Exercise 1.8
 
-(define (square x) (* x x))
+; Exercise 1.8
 
-(define (cube x) (* x x x))
+(define (cube-root x)
 
-(define (average x y)
-  (/ (+ x y) 2))
+  (define (square x) (* x x))
 
-(define (improve guess x)
-  (average guess (/ x (square guess))))
+  (define (cube x) (* x x x))
 
-(define (good-enough? guess x)
-  (< (abs (- (cube guess) x)) 0.001))
+  (define (average x y)
+    (/ (+ x y) 2))
 
-(define (cube-root guess x)
-  (if (good-enough? guess x)
-      guess
-      (cube-root (improve guess x) x)))
+  (define (improve guess)
+    (/ (+ (/ x (square guess)) (* 2 guess)) 3))
 
-;; Note: the starting guess MUST be a float.
+  (define (good-enough? guess)
+    (< (abs (- (cube guess) x)) 0.001))
+
+  (define (cube-root-iter guess)
+    (if (good-enough? guess)
+        guess
+        (cube-root-iter (improve guess))))
+
+  (cube-root-iter 1.0))
