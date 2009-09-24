@@ -145,7 +145,7 @@
   ;; example of bogus big number:
   ;;   (root 1e50) => recurses forever!
   ;;   this is because we have to actually square the guess to see if it's good
-  ;;   enough, and so (eventually) we have overflow
+  ;;   enough, and so maybe we have overflow?
 
   ;; alternative good-enough?:
 (define (root x)
