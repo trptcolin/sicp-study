@@ -51,19 +51,12 @@
 
 ; Exercise 1.3
 
-(define (square x) (* x x))
-
-(define (sum-of-squares x y) (+ (square x) (square y)))
-
-
 (define (sum-of-squares-of-two-largest a b c)
-  (cond ((and (<= a b) (<= a c))
-         (sum-of-squares b c))
-        ((<= b c)
-         (sum-of-squares a c))
-        (else
-         (sum-of-squares a b))))
-
+  (define (square x) (* x x))
+  (define (sum-of-squares x y) (+ (square x) (square y)))
+  (apply sum-of-squares
+         (delete (min a b c)
+                 (list a b c))))
 
 
 ; Exercise 1.4
@@ -180,11 +173,8 @@
 ; Exercise 1.8
 
 (define (cube-root x)
-
   (define (square x) (* x x))
-
   (define (cube x) (* x x x))
-
   (define (average x y)
     (/ (+ x y) 2))
 
