@@ -55,8 +55,7 @@
   (define (square x) (* x x))
   (define (sum-of-squares x y) (+ (square x) (square y)))
   (apply sum-of-squares
-         (delete (min a b c)
-                 (list a b c))))
+         (take (sort (list a b c) >) 2)))
 
 
 ; Exercise 1.4
