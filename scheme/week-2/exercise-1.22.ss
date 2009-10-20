@@ -27,22 +27,23 @@
          (newline)
          (display "done"))))
 
-(search-for-primes 1000 3)
+(define (search-and-time-several-primes)
+    (search-for-primes 1000 3)
 ; => 0
-(search-for-primes 10000 3)
+    (search-for-primes 10000 3)
 ; => 0
-(search-for-primes 100000 3)
+    (search-for-primes 100000 3)
 ; => 0
 ;;; etc...
-(search-for-primes 1000000000 3)
+    (search-for-primes 1000000000 3)
 ; => 0.08, 0.07
-(search-for-primes 10000000000 3)
+    (search-for-primes 10000000000 3)
 ; => 0.25, 0.24
-(search-for-primes 100000000000 3)
+    (search-for-primes 100000000000 3)
 ; => 0.8, 0.79
-(search-for-primes 1000000000000 3)
+    (search-for-primes 1000000000000 3)
 ; => 2.53, 2.5
-
+)
 ;; Yes, looks like the time increases by a factor of (sqrt 10) when the primes
 ;;   tested grow by a factor of 10.  I can only observe it for really big numbers
 ;;   on my machine :)
