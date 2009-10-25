@@ -72,7 +72,3 @@
 ;; 2.000000000000006
 
 
-
-;; 16th roots are not working, though!!!
-
-
