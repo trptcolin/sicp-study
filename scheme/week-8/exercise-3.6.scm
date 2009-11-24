@@ -1,0 +1,40 @@
+(define (rand-update x)
+  (let ((a 27) (b 26) (m 127))
+    (modulo (+ (* a x) b) m)))
+
+(define rand
+  (let ((x 0))
+    (define (generate)
+      (set! x (rand-update x))
+      x)
+    (define (reset n)
+      (set! x n))
+    (define (dispatch a)
+      (cond ((eq? 'generate a) (generate))
+            ((eq? 'reset a) reset)
+            (else (error "No such method -- rand" a))))
+    dispatch))
+
+(load "test-manager/load")
+
+((rand 'reset) 20)
+(define rand-1 (rand 'generate))
+(define rand-2 (rand 'generate))
+(define rand-3 (rand 'generate))
+((rand 'reset) 20)
+(define rand-a (rand 'generate))
+(define rand-b (rand 'generate))
+(define rand-c (rand 'generate))
+
+(let ((x1 rand-1)
+      (x2 rand-2)
+      (x3 rand-3)
+      (y1 rand-a)
+      (y2 rand-b)
+      (y3 rand-c))
+  (define-each-test
+    (assert-equals x1 y1)
+    (assert-equals x2 y2)
+    (assert-equals x3 y3)))
+
+(run-registered-tests)
